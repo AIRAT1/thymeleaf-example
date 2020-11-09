@@ -5,6 +5,7 @@ import de.demo.exception.NotFoundException;
 import de.demo.repository.PersonRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.servlet.ModelAndView;
@@ -12,6 +13,7 @@ import org.springframework.web.servlet.ModelAndView;
 import java.util.List;
 
 @Controller
+@Transactional
 public class PersonController {
     private final PersonRepository personRepository;
 
@@ -21,6 +23,7 @@ public class PersonController {
     }
 
     @GetMapping("/")
+    @Transactional(readOnly = true)
     public ModelAndView listPage() {
         ModelAndView mav = new ModelAndView("list");
         List<Person> persons = personRepository.findAll();
@@ -29,6 +32,7 @@ public class PersonController {
     }
 
     @GetMapping("/edit")
+    @Transactional(readOnly = true)
     public ModelAndView editPage(@RequestParam(value = "id", required = false, defaultValue = "1") int id) {
         ModelAndView mav = new ModelAndView("edit");
         Person person = personRepository.findById(id).orElseThrow(NotFoundException::new);
@@ -45,6 +49,7 @@ public class PersonController {
 //    }
 
     @PostMapping("/edit")
+    @Transactional(readOnly = true)
     public String update(@RequestParam("name") String name, Person person) {
         person.setName(name);
         personRepository.save(person);
