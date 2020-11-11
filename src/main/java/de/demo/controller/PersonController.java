@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.servlet.ModelAndView;
 
+import javax.validation.Valid;
 import java.util.List;
 
 @Controller
@@ -50,7 +51,7 @@ public class PersonController {
 
     @PostMapping("/edit")
     @Transactional(readOnly = true)
-    public String update(@RequestParam("name") String name, Person person) {
+    public String update(@RequestParam("name") String name, @Valid Person person) {
         person.setName(name);
         personRepository.save(person);
         return "edit";
